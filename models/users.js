@@ -19,7 +19,7 @@ var session = driver.session();
         console.log("password",password)
         return session.run(`MATCH (user:StemUser {email:"${email}"}) RETURN user`)
                     .then(results=>{
-                        console.log("response",response)
+                        console.log("response",results)
                         if(!_.isEmpty(results.records)){
                             return {error:'Email address already exists',status:400}
                         }else{
