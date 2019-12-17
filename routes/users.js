@@ -42,6 +42,7 @@ exports.register = (req,res,next)=>{
     let password = req.body.data.password1;
     Users.register(dbConnect.getSession(req),type,fname,lname,email,password)
     .then(response=>{
+        console.log("response",response)
         const mailOptions = {
             from:"pspankajsingh395@gmail.com",
             to:`${email}`,
