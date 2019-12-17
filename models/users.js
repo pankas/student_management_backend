@@ -12,7 +12,19 @@ var graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
 
 var driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));
 var session = driver.session();
+session
+    .run("CREATE (n {hello: 'World'}) RETURN n.name")
+    .then(function(result) {
+        result.records.forEach(function(record) {
+            console.log(record)
+        });
 
+        session.close();
+    })
+    .catch(function(error) {
+        console.log(error);
+    });
+    
     var register = (type,firstname,lastname,email,password)=>{
         let id = uuid.v4()
         let hashPwd  = password;
