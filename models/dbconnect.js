@@ -3,12 +3,19 @@
 var nconf = require('../config');
 var neo4j = require('neo4j-driver');
 // var neo4j = require('neo4j-driver');
+var neo4j = require('neo4j-driver').v1;
 
-var driver = neo4j.driver(nconf.get('neo4j-local'),neo4j.auth.basic(nconf.get('USERNAME'),nconf.get('PASSWORD')));
+var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
+var graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
+var graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
 
-if(nconf.get('neo4j')=='remote'){
-    driver = neo4j.driver(nconf.get('neo4j-remote'), neo4j.auth.basic(nconf.get('USERNAME'), nconf.get('PASSWORD')));
-}
+var driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));
+
+// var driver = neo4j.driver(nconf.get('neo4j-local'),neo4j.auth.basic(nconf.get('USERNAME'),nconf.get('PASSWORD')));
+
+// if(nconf.get('neo4j')=='remote'){
+//     driver = neo4j.driver(nconf.get('neo4j-remote'), neo4j.auth.basic(nconf.get('USERNAME'), nconf.get('PASSWORD')));
+// }
 
 exports.getSession = (context)=>{
     if(context.neo4jSession){
