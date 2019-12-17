@@ -5,7 +5,7 @@ if(process.env.NODE_ENV=="development"){
     }
 else
 {
-    config.db = 'https://10.17.15.43:5000'
+    config.db = 'https://quiet-bayou-33585.herokuapp.com/'
 }
 
 exports.config;

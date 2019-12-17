@@ -25,10 +25,10 @@ nconf.env(['PORT', 'NODE_ENV'])
     }
   })
   .defaults({
-      'USERNAME':'neo4j',
-      'PASSWORD':'innav',
+      'USERNAME':'app155962895-u16AxG',
+      'PASSWORD':'b.0vf9XO48JqaL.Yx8gDiL9D3LvnFNG',
     'neo4j': 'local',
-    'neo4j-local': 'bolt://localhost:7687',
+    'neo4j-local': 'bolt://hobby-ponjfgnijmdigbkepecaofdl.dbs.graphenedb.com:24787',
     'base_url': config.config,
     'api_path': '/api/v0'
   });
