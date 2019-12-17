@@ -26,7 +26,7 @@ nconf.env(['PORT', 'NODE_ENV'])
   })
   .defaults({
       'USERNAME':'app155962895-u16AxG',
-      'PASSWORD':'b.0vf9XO48JqaL.Yx8gDiL9D3LvnFNG',
+      'PASSWORD':'b.0vf9XO48JqaL.Yx8gDiL9D3LvnFNGgit ',
     'neo4j': 'local',
     'neo4j-local': 'bolt://hobby-ponjfgnijmdigbkepecaofdl.dbs.graphenedb.com:24787',
     'base_url': config.config,
