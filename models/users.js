@@ -16,7 +16,7 @@ var session = driver.session();
     var register = (type,firstname,lastname,email,password)=>{
         let id = uuid.v4()
         let hashPwd  = password;
-        console.log("password",password)
+        console.log("password",email,password)
         return session.run(`MATCH (user:StemUser {email:"${email}"}) RETURN user`)
                     .then(results=>{
                         console.log("response",results)
