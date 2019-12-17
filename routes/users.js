@@ -76,7 +76,7 @@ exports.login = (req,res,next)=>{
 
 exports.forgotPass = (req,res,next)=>{
   let email = Object.keys(req.body)
-    Users.forgotPass(,email)
+    Users.forgotPass(email)
         .then(response=>{     
             writeResponse(res,response,201)
         })
