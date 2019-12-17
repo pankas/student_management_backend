@@ -23,6 +23,7 @@ exports.getSession = (context)=>{
     }
     else{
         context.neo4jSession = driver.session();
+        console.log("driver session",driver.session())
         return context.neo4jSession;
     }
 }
