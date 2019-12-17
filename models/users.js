@@ -4,8 +4,16 @@ var dbConnect = require('./dbconnect');
 var randomstring = require("randomstring");
 var _ = require('lodash');
 var crypto = require('crypto');
+var neo4j = require('neo4j-driver');
 
-    var register = (session,type,firstname,lastname,email,password)=>{
+var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
+var graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
+var graphenedbPass = process.env.GRAPHENEDB_BOLT_PASSWORD;
+
+var driver = neo4j.driver(graphenedbURL, neo4j.auth.basic(graphenedbUser, graphenedbPass));
+var session = driver.session();
+
+    var register = (type,firstname,lastname,email,password)=>{
         let id = uuid.v4()
         let hashPwd  = password;
         console.log("password",password)
@@ -27,7 +35,7 @@ var crypto = require('crypto');
                     })
     }
 
-    var forgotPass = (session,email)=>{
+    var forgotPass = (email)=>{
         return session.run(`MATCH (user:StemUser {email:"${email}"}) RETURN user`)
                         .then(results=>{
                             if(results.records.length === 0){
@@ -44,7 +52,7 @@ var crypto = require('crypto');
 // RETURN n.name, n.surname
 
 
-var update = (session,fname,lname,email,type)=>{
+var update = (fname,lname,email,type)=>{
     return session.run(`MATCH (n:StemUser {email:"${email}"}) SET n.firstname= "${fname}",n.lastname="${lname}",n.type="${type}" RETURN n`)
                     .then(results=>{
                         console.log("resultssss",results.records[0]._fields[0].properties)
@@ -58,7 +66,7 @@ var update = (session,fname,lname,email,type)=>{
                     })
 }
 
-    var login = (session,email,password)=>{
+    var login = (email,password)=>{
         return session.run('MATCH (user:StemUser {email:{email}}) RETURN user',{email:email})
                         .then(results=>{
                             if(_.isEmpty(results.records)){
@@ -74,7 +82,7 @@ var update = (session,fname,lname,email,type)=>{
                         })
     }
 
-    var getUsers =  (session)=>{
+    var getUsers =  ()=>{
         return session.run('MATCH (user:StemUser ) RETURN user')
         .then(results=>{
             let data = []

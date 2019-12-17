@@ -42,7 +42,7 @@ exports.register = (req,res,next)=>{
     let email = req.body.data.email;
     let type = req.body.data.type;
     let password = req.body.data.password1;
-    Users.register(dbConnect.getSession(req),type,fname,lname,email,password)
+    Users.register(type,fname,lname,email,password)
     .then(response=>{
         console.log("response",response)
         const mailOptions = {
@@ -65,7 +65,7 @@ exports.login = (req,res,next)=>{
     let email = req.body.data.email
     let password = req.body.data.password
     console.log("request body data",req.body.data)
-    Users.login(dbConnect.getSession(req),email,password)
+    Users.login(email,password)
     .then(response=>{
         writeResponse(res,response,201)
     })
@@ -76,7 +76,7 @@ exports.login = (req,res,next)=>{
 
 exports.forgotPass = (req,res,next)=>{
   let email = Object.keys(req.body)
-    Users.forgotPass(dbConnect.getSession(req),email)
+    Users.forgotPass(email)
         .then(response=>{     
             writeResponse(res,response,201)
         })
@@ -87,7 +87,7 @@ exports.forgotPass = (req,res,next)=>{
 
 
 exports.getUsers = (req,res,next)=>{
-    Users.getUsers(dbConnect.getSession(req))
+    Users.getUsers(
     .then(response=>{     
         writeResponse(res,response,201)
     })
@@ -101,7 +101,7 @@ exports.update = (req,res,next)=>{
     let lname = req.body.data.lname
     let email = req.body.data.email
     let type = req.body.data.type
-    Users.update(dbConnect.getSession(req),fname,lname,email,type)
+    Users.update(fname,lname,email,type)
     .then(response=>{     
         writeResponse(res,response,201)
     })
