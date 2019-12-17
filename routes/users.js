@@ -6,6 +6,8 @@ const nodemailer = require('nodemailer');
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
+console.log("db connect",dbConnect)
+
 const OAuth2Client = new OAuth2(
     "638402877955-afmpukcjg56c2nptkh85aa6d738ktu47.apps.googleusercontent.com",
     "rYGAq5C0sBOAG43Q2vdzUkWJ",
