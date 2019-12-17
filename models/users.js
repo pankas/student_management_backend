@@ -19,12 +19,12 @@ session
             console.log(record)
         });
 
-        session.close();
+        // session.close();
     })
     .catch(function(error) {
         console.log(error);
     });
-    
+
     var register = (type,firstname,lastname,email,password)=>{
         let id = uuid.v4()
         let hashPwd  = password;
