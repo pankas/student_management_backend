@@ -3,7 +3,7 @@
 var nconf = require('../config');
 var neo4j = require('neo4j-driver');
 // var neo4j = require('neo4j-driver');
-var neo4j = require('neo4j-driver').v1;
+// var neo4j = require('neo4j-driver').v1;
 
 var graphenedbURL = process.env.GRAPHENEDB_BOLT_URL;
 var graphenedbUser = process.env.GRAPHENEDB_BOLT_USER;
