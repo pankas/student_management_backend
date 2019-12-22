@@ -145,6 +145,7 @@ exports.login = (req,res)=>{
 exports.getUsers = (req,res)=>{
   const header = req.headers['authorization'];
   if(header !== undefined){
+    console.log("headerss",header)
     jwt.verify(header,'istem', function(err, decoded) {
       if(err){
           console.log(err)
