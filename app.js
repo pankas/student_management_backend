@@ -1,6 +1,20 @@
 var express = require('express');
 var routes = require('./routes/index');
 var bodyParser = require('body-parser');
+const mongoose = require("mongoose");
+
+// DB Config
+const db = require("./config/keys").mongoURI;
+console.log("ddj",db)
+// Connect to MongoDB
+mongoose
+  .connect(
+    db,
+    { useNewUrlParser: true,useUnifiedTopology: true }
+  )
+  .then(() => console.log("MongoDB successfully connected"))
+  .catch(err => console.log(err));
+  
 
 let app = express();
 app.use(bodyParser.urlencoded({limit: '50mb',extended:true}))
@@ -23,7 +37,7 @@ api.use(function(req, res, next) {
 
 api.post('/register',routes.users.register);
 api.post('/login',routes.users.login);
-api.post('/forgot-pass',routes.users.forgotPass);
+// api.post('/forgot-pass',routes.users.forgotPass);
 api.post('/update',routes.users.update);
 api.get('/users/',routes.users.getUsers);
 api.post('/send-mail/',routes.users.sendMail);
