@@ -92,7 +92,7 @@ exports.register = (req,res)=>{
         from:"pspankajsingh395@gmail.com",
         to:`${req.body.data.email}`,
         subject:"Login credentials",
-        text:`Your email is:${req.body.data.email} and password is ${password}`
+        text:`Your email is:${req.body.data.email} and password is ${newUser.password}`
     }
     smtpTransport.sendMail(mailOptions, (error, response) => {
         error ? console.log(error) : console.log(response);
