@@ -71,9 +71,10 @@ const smtpTransport = nodemailer.createTransport({
 })
 
 exports.register = (req,res)=>{
+  console.log("request body",req.body.data)
     User.findOne({ email: req.body.data.email }).then(user => {
         if (user) {
-          return res.status(400).json({ email: "Email already exists" });
+          return res.json({ error: "Email already exists" });
         } else {
           const newUser = new User({
             firstName: req.body.data.firstname,
@@ -89,9 +90,9 @@ exports.register = (req,res)=>{
     .then(user =>{ 
       const mailOptions = {
         from:"pspankajsingh395@gmail.com",
-        to:`${email}`,
+        to:`${req.body.data.email}`,
         subject:"Login credentials",
-        text:`Your email is:${email} and password is ${password}`
+        text:`Your email is:${req.body.data.email} and password is ${password}`
     }
     smtpTransport.sendMail(mailOptions, (error, response) => {
         error ? console.log(error) : console.log(response);
@@ -108,7 +109,7 @@ exports.login = (req,res)=>{
     const password = req.body.data.password;
     User.findOne({ email }).then(user => {
       if (!user) {
-        return res.status(404).json({ emailnotfound: "Email not found" });
+        return res.json({ error: "Email not found" });
       }
   const dcrptPassword = cryptr.decrypt(user.password);
         if (password === dcrptPassword) {
