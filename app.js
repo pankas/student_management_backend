@@ -3,10 +3,7 @@ var routes = require('./routes/index');
 var bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 
-// DB Config
 const db = require("./config/keys").mongoURI;
-console.log("ddj",db)
-// Connect to MongoDB
 mongoose
   .connect(
     db,
