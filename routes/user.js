@@ -148,10 +148,9 @@ exports.getUsers = (req,res)=>{
       if(err){
           console.log(err)
       }else{
-        console.log("elses")
         User.find()
         .then(response=>{    
-          console.log("all users",response[0].uType) 
+          console.log("all users",response) 
           return res
           .json({response});
           })
