@@ -1,19 +1,14 @@
 const express = require("express");
-const router = express.Router();
 const nodemailer = require('nodemailer');
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
-
 const Cryptr = require('cryptr');
 const cryptr = new Cryptr('myTotalySecretKey');
-
 const jwt = require("jsonwebtoken");
 const keys = require("../config/keys");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
 // Create Schema
-
 const UserSchema = new Schema({
     firstName: {
         type: String,
@@ -40,11 +35,9 @@ const UserSchema = new Schema({
       default: Date.now
     }
   });
-
-  var User = mongoose.model("users", UserSchema)
-
-// var User = require("../models/users");
-// console.log("userss",User.User)
+//Setting Model
+var User = mongoose.model("users", UserSchema)
+//Configurayion for handling email
 const OAuth2Client = new OAuth2(
     "1099491383303-fsfhqm3ecje3jr1bm61er75surk340ik.apps.googleusercontent.com",
     "qOmsnpZIeGmdBiywD8tRoezB",
@@ -54,7 +47,6 @@ OAuth2Client.setCredentials({
     refresh_token:"1//0475kadiXHf7HCgYIARAAGAQSNwF-L9IryU9mY4LTYOhtdUrUoVbqsxaJwvhGNvjhkyVzjM0tdNdNlhO24idhPEqx4QDaBpKJKgA"
 })
 const accessToken = OAuth2Client.getAccessToken();
-
 const smtpTransport = nodemailer.createTransport({
     service:"Gmail",
     host: 'smtp.gmail.com',
@@ -69,9 +61,8 @@ const smtpTransport = nodemailer.createTransport({
         accessToken: accessToken 
     }
 })
-
+// Register User
 exports.register = (req,res)=>{
-  console.log("request body",req.body.data)
     User.findOne({ email: req.body.data.email }).then(user => {
         if (user) {
           return res.json({ error: "Email already exists" });
@@ -103,7 +94,7 @@ exports.register = (req,res)=>{
         }
       });
 }
-
+// User Login
 exports.login = (req,res)=>{
     const email = req.body.data.email;
     const password = req.body.data.password;
@@ -141,18 +132,15 @@ exports.login = (req,res)=>{
         }
     });
 }
-
 exports.getUsers = (req,res)=>{
   const header = req.headers['authorization'];
   if(header !== undefined){
-    console.log("headerss",header)
     jwt.verify(header,'istem', function(err, decoded) {
       if(err){
           console.log(err)
       }else{
         User.find()
         .then(response=>{    
-          console.log("all users",response) 
           return res
           .json({response});
           })
@@ -161,72 +149,74 @@ exports.getUsers = (req,res)=>{
           })
       }
      })
-
-    // jwt.verify(header,'istem')
-    //   .then(res=>{
-    //     console.log("uteskj",res)
-    //     User.find()
-    //    .then(response=>{    
-    //     User.find()
-    //     .then(response=>{    
-    //       console.log("all users",response) 
-    //       return res
-    //       .json({response});
-    //       })
-    //       .catch(err=>{
-    //           console.log("error",err)
-    //       })
-    //      })
-    //      .catch(err=>{
-    //          console.log("error",err)
-    //      })
-    //   })
-    //   .catch(err=>{
-    //     res.sendStatus(403);
-    //   })
-    // next()
   }else{
     res.sendStatus(403);
   }
 }
-
+exports.userDetails = (req,res)=>{
+  const header = req.headers['authorization'];
+  if(header !== undefined){
+    jwt.verify(header,'istem', function(err, decoded) {
+      if(err){
+      }else{
+        const email = req.body.data.email;
+        User.findOne({ email }).then(user => {
+          if (!user) {
+            return res.json({ error: "Email not found" });
+          }
+          res.json({
+            success: true,
+            token: token,
+            firstname:user.firstName,
+            lastname:user.lastName,
+            email: user.email,
+            type:user.uType
+          });
+        });
+      }
+     })
+  }else{
+    res.sendStatus(403);
+  }
+}
 exports.update = (req,res)=>{
     let fname = req.body.data.fname
     let lname = req.body.data.lname
     let email = req.body.data.email
     let type = req.body.data.type
-    
-    var query = {'email': email};
     newData = {
         firstName: fname,
         lastName: lname,
         uType: type
     }
-
     const header = req.headers['authorization'];
     if(header !== undefined){
-      // const jwt = header.split('');
-      // const bToken = jwt[1];
-      jwt.verify(header,'istem')
-        .then(res=>{
-            User.updateOne({'email':email}, {$set: newData}, {upsert: true})
-            .then(r=>{
-              res.json({r})
-                console.log("responses",r)
-            })
-            .catch(err=>{
-                console.log("error",err)
-            })
-        })
-        .catch(err=>{
-          res.sendStatus(403);
-        })
-      next()
+      jwt.verify(header,'istem', function(err, decoded) {
+        if(err){
+            console.log(err)
+        }else{
+          const email = req.body.data.email;
+          User.updateOne({'email':email}, {$set: newData}, {upsert: true})
+          .then(r=>{
+            User.findOne({ email }).then(user => {
+              res.json({
+                success: true,
+                firstname:user.firstName,
+                lastname:user.lastName,
+                email: user.email,
+                type:user.uType
+              });
+            });
+          })
+          .catch(err=>{
+              console.log("error",err)
+          })
+        }
+       })
     }else{
       res.sendStatus(403);
     } 
 }
-
 exports.sendMail = (req,res)=>{
     let to = req.body.data.to
     let from = req.body.data.from
@@ -238,7 +228,6 @@ exports.sendMail = (req,res)=>{
             subject:subject,
             text:content
         }
-        console.log("mail options",mailOptions)
         const header = req.headers['authorization'];
         if(header !== undefined){
           jwt.verify(header,'istem', function(err, decoded) {
@@ -246,24 +235,13 @@ exports.sendMail = (req,res)=>{
                 console.log(err)
             }else{
               smtpTransport.sendMail(mailOptions, (error, response) => {
-                error ? console.log(error) : console.log(response);
                 smtpTransport.close();
+                return  error ?  res
+                .json({error}) : res.json({response});
               });
 
             }
            })
-          // jwt.verify(header,'secretkey')
-          //   .then(res=>{
-                // smtpTransport.sendMail(mailOptions, (error, response) => {
-                // error ? console.log(error) : console.log(response);
-                // smtpTransport.close();
-              // });
-          //     writeResponse(res,'mail sent successully',201)
-          //   })
-          //   .catch(err=>{
-          //     res.sendStatus(403);
-          //   })
-          // next()
         }else{
           res.sendStatus(403);
         }
